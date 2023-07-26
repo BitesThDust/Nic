@@ -1,34 +1,41 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
-
 public class Calc {
-    static Scanner scanner = new Scanner(System.in);
-    static int numb1, numb2;
+   static int numb1, numb2;
     static char oper;
     static int res;
-
+    private static Scanner scanner;
     public static void main(String[] args) throws Exception {
-        String sk = scanner.nextLine();
+        scanner = new Scanner(System.in);
+        System.out.println("Введите выражение:");
+        String input = scanner.nextLine();
+        try {
+            String result = calc(input);
+            System.out.println(result);
+        } catch(Exception e){
+            throw new Exception();
+        }
+    }
 
-
-        char[] under_char = new char[10];
+    public static String calc(String input) throws Exception {
+        String sk = input;
+        char[] un_ch = new char[10];
         for (int i = 0; i < sk.length(); i++) {
-            under_char[i] = sk.charAt(i);
-            if (under_char[i] == '+') {
+            un_ch[i] = sk.charAt(i);
+            if (un_ch[i] == '+') {
                 oper = '+';
             }
-            if (under_char[i] == '-') {
+            if (un_ch[i] == '-') {
                 oper = '-';
             }
-            if (under_char[i] == '*') {
+            if (un_ch[i] == '*') {
                 oper = '*';
             }
-            if (under_char[i] == '/') {
+            if (un_ch[i] == '/') {
                 oper = '/';
             }
         }
-        String under_charString = String.valueOf(under_char);
+        String under_charString = String.valueOf(un_ch);
         String[] blacks = under_charString.split("\\s+");
         if (blacks.length != 3) {
             throw new Exception("Перебор ");
@@ -36,12 +43,10 @@ public class Calc {
         String stable00 = blacks[0];
         String stable01 = blacks[2];
         String string03 = stable01.trim();
-
         if (Character.isDigit(stable00.charAt(0)) && Character.isDigit(string03.charAt(0))) {
             numb1 = Integer.parseInt(stable00);
             numb2 = Integer.parseInt(string03);
             res = calculate(numb1, numb2, oper);
-            System.out.println(res);
         } else {
             numb1 = romanToNumber(stable00);
             numb2 = romanToNumber(string03);
@@ -52,19 +57,17 @@ public class Calc {
             res = calculate(numb1, numb2, oper);
 
             if (Character.isDigit(stable00.charAt(0))) {
-                System.out.println(res);
+                return String.valueOf(res);
             } else {
                 if (res <= 0) {
                     throw new Exception();
-                }else {
-                    String resultRoman = convertNumToRoman(res);
-                    System.out.println(resultRoman);
+                } else {
+                    return convertNumToRoman(res);
                 }
             }
         }
+        return String.valueOf(res);
     }
-
-
     private static String convertNumToRoman (int numArabian) {
         String[] roman = {"O", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
                 "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX", "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
@@ -78,7 +81,7 @@ public class Calc {
         return s;
     }
     private static int romanToNumber (String roman) {
-            try {
+        try {
             if (roman.equals("I")) {
                 return 1;
             } else if (roman.equals("II")) {
@@ -100,15 +103,14 @@ public class Calc {
             } else if (roman.equals("X")) {
                 return 10;
             }
-            } catch (InputMismatchException e) {
-                throw new InputMismatchException("Неверный формат данных");
-            }
-            return 0;
+        } catch (InputMismatchException e) {
+            throw new InputMismatchException("Неверный формат данных");
+        }
+        return 0;
     }
-
     private static int calculate(int num1,  int num2, char op) throws Exception {
         if (num1 <= 0 || num2 <= 0 || num1 >= 11 || num2 >= 11) {
-            throw new Exception(" Введитённые цифры не соответствуют диапозону от 1 до 10 включительно ");
+            throw new Exception();
         }
         int res = 0;
         switch (op) {
@@ -125,7 +127,7 @@ public class Calc {
 
                 try {
                     res = num1 / num2;
-            }catch (ArithmeticException | InputMismatchException e) {
+                }catch (ArithmeticException | InputMismatchException e) {
                     System.out.println("АА");
                     System.out.println( "2");
                     break;
@@ -135,7 +137,6 @@ public class Calc {
             default:
                 throw new Exception();
         }
-
         return res;
     }
 }
